@@ -20,9 +20,14 @@ public class UserController {
 	private UserRepo ur;
 	
 	@PostMapping
-	public User saveUser(@RequestBody User user) {
-		return ur.save(user);
-	}
+    public User saveUser(@RequestBody User user) {
+        if (user.getVehicles() != null) {
+            for (Vehicle v : user.getVehicles()) {
+                v.setUser(user);
+            }
+        }
+        return ur.save(user);
+    }
 	
 	@GetMapping
 	public List<User> getAllUsers() {
@@ -42,6 +47,7 @@ public class UserController {
 			User ouser = euser.get();
 			ouser.setFirstname(updateuser.getFirstname());
 			ouser.setLastname(updateuser.getLastname());
+			ouser.setVehicles(updateuser.getVehicles());
 			return ur.save(ouser);
 		}
 		return null;

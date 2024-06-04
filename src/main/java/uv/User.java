@@ -1,6 +1,8 @@
 package uv;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -9,8 +11,8 @@ public class User {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
 	private String firstname,lastname;
-	@OneToMany
-	@JoinColumn(name="vehicle_id")
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	@JsonManagedReference
 	private Set<Vehicle> vehicles;
 	public int getId() {
 		return id;
@@ -34,8 +36,13 @@ public class User {
 		return vehicles;
 	}
 	public void setVehicles(Set<Vehicle> vehicles) {
-		this.vehicles = vehicles;
-	}
+        this.vehicles = vehicles;
+        if (vehicles != null) {
+            for (Vehicle v : vehicles) {
+                v.setUser(this);
+            }
+        }
+    }
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", firstname=" + firstname + ", lastname=" + lastname + ", vehicles=" + vehicles

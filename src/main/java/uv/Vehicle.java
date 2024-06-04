@@ -1,4 +1,6 @@
 package uv;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -8,7 +10,9 @@ public class Vehicle {
 	private int id;
 	private int year;
 	private String model,name;
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne
+    @JoinColumn(name = "user_id")
+	@JsonBackReference
 	private User user;
 	public int getId() {
 		return id;
